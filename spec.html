@@ -5738,23 +5738,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-iscodelike" type="abstract operation">
-      <h1>
-        IsCodeLike (
-          _argument_: an Object,
-        ): a Boolean
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It checks if _argument_ contains the host-defined [[HostDefinedIsCodeLike]] internal slot.</dd>
-      </dl>
-      <emu-alg>
-        1. If _argument_ does not have a [[HostDefinedIsCodeLike]] internal slot, return *false*.
-        1. Assert _argument_.[[HostDefinedIsCodeLike]] is a Boolean.
-        1. Return _argument_.[[HostDefinedIsCodeLike]].
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-isconstructor" type="abstract operation">
       <h1>
         IsConstructor (
@@ -28874,7 +28857,7 @@
         </dl>
         <emu-alg>
           1. Assert: If _direct_ is *false*, then _strictCaller_ is also *false*.
-          1. If _x_ is an Object and IsCodeLike(_x_) is *true*, then
+          1. If _x_ is an Object and HostShouldEvalStringifyObject(_x_) is *true*, then
             1. Let _xStr_ be ? ToString(_x_).
           1. Else if _x_ is a String, then
             1. Let _xStr_ be _x_.
@@ -28964,6 +28947,23 @@
           _parameterArgs_ represents the list of values passed when using one of the function constructors. _bodyArg_ represents the function body or the value passed to an `eval` call.
         </p>
         <p>The default implementation of HostEnsureCanCompileStrings is to return NormalCompletion(~unused~).</p>
+      </emu-clause>
+
+      <emu-clause id="sec-hostshouldevalstringifyobject" type="host-defined abstract operation">
+        <h1>
+          HostShouldEvalStringifyObject (
+            _argument_: an Object,
+          ): a Boolean
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It allows host environments to determine if _argument_ should be stringified by eval,
+          rather than returned directly.</dd>
+        </dl>
+        <p>
+          _argument_ represents the Object to be checked for whether eval should stringify.
+        </p>
+        <p>The default implementation of HostShouldEvalStringifyObject is to return *false*.</p>
       </emu-clause>
 
       <emu-clause id="sec-evaldeclarationinstantiation" type="abstract operation">
@@ -50868,6 +50868,7 @@ THH:mm:ss.sss
     <p><b>HostGetImportMetaProperties(...)</b></p>
     <p><b>HostGrowSharedArrayBuffer(...)</b></p>
     <p><b>HostHasSourceTextAvailable(...)</b></p>
+    <p><b>HostShouldEvalStringifyObject(...)</b></p>
     <p><b>HostLoadImportedModule(...)</b></p>
     <p><b>HostMakeJobCallback(...)</b></p>
     <p><b>HostPromiseRejectionTracker(...)</b></p>
@@ -50881,7 +50882,6 @@ THH:mm:ss.sss
     <p>[[HostDefined]] on Script Records: See <emu-xref href="#table-script-records"></emu-xref>.</p>
     <p>[[HostDefined]] on Module Records: See <emu-xref href="#table-module-record-fields"></emu-xref>.</p>
     <p>[[HostDefined]] on JobCallback Records: See <emu-xref href="#table-jobcallback-records"></emu-xref>.</p>
-    <p>[[HostDefinedIsCodeLike]]: A Boolean. See IsCodeLike.</p>
     <p>[[HostSynchronizesWith]] on Candidate Executions: See <emu-xref href="#table-candidate-execution-records"></emu-xref>.</p>
     <p>[[IsHTMLDDA]]: See <emu-xref href="#sec-IsHTMLDDA-internal-slot"></emu-xref>.</p>
   </emu-annex>
